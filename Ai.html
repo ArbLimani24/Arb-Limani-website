@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/settings.png">
+    <title>More Settings</title>
+    <style>
+      #backIcon{
+        height: 80px !important;
+        position: relative !important;
+        top: 380px;
+        left: 100px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+        margin-left: -300px;
+      }
+
+      #backIcon, .text {
+        animation: moveUpDown 2s ease-in-out infinite;
+      }
+
+      .text {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+        margin-top: 330px;
+        margin-left: 400px;
+      }
+
+      @keyframes moveUpDown {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-50px);
+        }
+      }
+
+      .container2 {
+          text-align: center;
+          padding: 20px;
+          background-color: white;
+          border-radius: 10px;
+          width: 300px;
+          position: relative;
+          top: 160px;
+          margin-left: 30px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:active {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+      <div>
+        <h2>More Settings</h2> <hr>
+
+        <!--main section-->
+        <main>
+            <h2 class="h2">Try ai assistant</h2>
+            <!--ai container-->
+            <div class="container2">
+                <h1>Enhanced Voice Assistant</h1>
+                <button onclick="startRecognition()">Talk to Me</button>
+                <div class="response" id="response"></div>
+            </div>
+
+            <!--go back-->
+            <div>
+                <a href="index.html">
+                    <div class="container">
+                        <img src="images/settings.png" alt="Image" id="backIcon">
+                        <div class="text">Go Back</div>
+                </div>
+                </a>
+            </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const SpeechSynthesis = window.speechSynthesis;
+
+        let recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        const responseElement = document.getElementById('response');
+
+        // Variables for storing voices and selected voice
+        let voices = [];
+        let selectedVoice = null;
+
+        // Function to load available voices
+        function setVoice() {
+            voices = SpeechSynthesis.getVoices();
+            // Look for Siri or similar voice name
+            selectedVoice = voices.find(voice => voice.name.toLowerCase().includes('siri') || voice.name.toLowerCase().includes('alex'));
+            // If no Siri-like voice found, use a default available voice
+            if (!selectedVoice) {
+                selectedVoice = voices[0]; // Default to first available voice
+            }
+        }
+
+        // Initialize voices once they are loaded
+        if (SpeechSynthesis.onvoiceschanged !== undefined) {
+            SpeechSynthesis.onvoiceschanged = setVoice;
+        } else {
+            // If the event is not supported, load voices immediately
+            setVoice();
+        }
+
+        // Start speech recognition when button is clicked
+        function startRecognition() {
+            recognition.start();
+        }
+
+        // Handle voice recognition result
+        recognition.onresult = function(event) {
+            const speechResult = event.results[0][0].transcript.toLowerCase();
+            responseElement.innerHTML = `You said: "${speechResult}"`;
+
+            handleVoiceCommand(speechResult);
+        };
+
+        recognition.onerror = function(event) {
+            responseElement.innerHTML = 'Sorry, I didn\'t understand that. Can you try again?';
+        };
+
+        // Function to make the assistant speak with a Siri-like voice
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = selectedVoice;
+            utterance.lang = 'en-US';
+            SpeechSynthesis.speak(utterance);
+        }
+
+        // Handle various voice commands
+        function handleVoiceCommand(command) {
+            if (command.includes('hello')) {
+                speak("Hello, how can I assist you today?");
+                speak("Speak or talk on me for everything")
+                responseElement.innerHTML = "Speak or talk on me for everything"
+                responseElement.innerHTML = 'Hello, how can I assist you today?';
+            } else if (command.includes('how are you')) {
+                speak("I am doing great, thank you for asking!");
+                responseElement.innerHTML = 'I am doing great, thank you!';
+            } else if (command.includes('what is your name')) {
+                speak("I am your voice assistant.");
+                responseElement.innerHTML = 'I am your voice assistant.';
+            } else if (command.includes('goodbye')) {
+                speak("Goodbye! Have a great day!");
+                responseElement.innerHTML = 'Goodbye! Have a great day!';
+            } else if (command.includes('what time is it')) {
+                const time = new Date().toLocaleTimeString();
+                speak(`The current time is ${time}`);
+                responseElement.innerHTML = `The current time is ${time}`;
+            } else if (command.includes('what is the date')) {
+                const date = new Date().toLocaleDateString();
+                speak(`Today's date is ${date}`);
+                responseElement.innerHTML = `Today's date is ${date}`;
+            } else if (command.includes('calculate')) {
+                const expression = command.replace('calculate', '').trim();
+                try {
+                    const result = eval(expression);
+                    speak(`The result is ${result}`);
+                    responseElement.innerHTML = `The result is ${result}`;
+                } catch (error) {
+                    speak("Sorry, I couldn't understand the calculation.");
+                    responseElement.innerHTML = 'Sorry, I couldn\'t understand the calculation.';
+                }
+            } else if (command.includes('weather')) {
+                speak("Sorry, I cannot fetch weather data right now, but you can check it on your favorite weather site.");
+                responseElement.innerHTML = 'Sorry, I cannot fetch weather data right now.';
+            } else if (command.includes('open')) {
+                const website = command.replace('open', '').trim();
+                window.open(`https://www.${website}.com`, '_blank');
+                speak(`Opening ${website}`);
+                responseElement.innerHTML = `Opening ${website}`;
+            } else {
+                speak("Sorry, I didn't understand that.");
+                responseElement.innerHTML = 'Sorry, I didn\'t understand that.';
+            }
+        }
+    </script>
+  </body>
+</html>

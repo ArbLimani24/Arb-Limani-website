@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/settings.png">
+    <title>More Settings</title>
+    <style>
+      #backIcon{
+        height: 80px !important;
+        position: relative !important;
+        top: 380px;
+        left: 100px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -90px;
+        margin-left: -300px;
+      }
+
+      #backIcon, .text {
+        animation: moveUpDown 2s ease-in-out infinite;
+      }
+
+      .text {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+        margin-top: 330px;
+        margin-left: 400px;
+      }
+
+      @keyframes moveUpDown {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-50px);
+        }
+      }
+      .stopwatch {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 200px !important;
+            position: relative !important;
+            margin-top: 250px;
+            margin-left: 80px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .time {
+            font-size: 48px;
+            color: #000;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+            margin-left: -130px;
+        }
+
+        .controls button {
+            background-color: green;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .controls button:disabled {
+            background-color: red;
+            cursor: not-allowed;
+        }
+
+        .controls button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+      <div>
+        <h2>More Settings</h2> <hr>
+
+        <!--main section-->
+        <main>
+            <h2 class="h2"><i>Stopwhatch</i></h2>
+            <!--stopwhatch container-->
+            <div>
+              <div class="stopwatch">
+                <div class="time" id="time">00:00:00</div>
+                <div class="controls">
+                    <button id="startStopBtn">Start</button>
+                    <button id="resetBtn" disabled>Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!--go back-->
+            <div>
+              <a href="index.html">
+                <div class="container">
+                  <img src="images/settings.png" alt="Image" id="backIcon">
+                  <div class="text">Go Back</div>
+              </div>
+              </a>
+            </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      let isRunning = false;
+        let startTime = 0;
+        let updatedTime = 0;
+        let difference = 0;
+        let tInterval;
+        let running = false;
+
+        // Select DOM elements
+        const timeDisplay = document.getElementById("time");
+        const startStopBtn = document.getElementById("startStopBtn");
+        const resetBtn = document.getElementById("resetBtn");
+
+        // Start/Stop button functionality
+        startStopBtn.addEventListener("click", function() {
+            if (isRunning === false) {
+                startTimer();
+                startStopBtn.textContent = "Stop";
+                resetBtn.disabled = false;
+                isRunning = true;
+            } else {
+                stopTimer();
+                startStopBtn.textContent = "Start";
+                isRunning = false;
+            }
+        });
+
+        // Reset button functionality
+        resetBtn.addEventListener("click", function() {
+            resetTimer();
+        });
+
+        // Function to start the timer
+        function startTimer() {
+            startTime = Date.now() - difference;
+            tInterval = setInterval(updateTime, 1);
+        }
+
+        // Function to stop the timer
+        function stopTimer() {
+            clearInterval(tInterval);
+        }
+
+        // Function to reset the timer
+        function resetTimer() {
+            clearInterval(tInterval);
+            isRunning = false;
+            difference = 0;
+            timeDisplay.textContent = "00:00:00";
+            startStopBtn.textContent = "Start";
+            resetBtn.disabled = true;
+        }
+
+        // Function to update the timer display
+        function updateTime() {
+            updatedTime = Date.now();
+            difference = updatedTime - startTime;
+            
+            let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+            
+            timeDisplay.textContent = hours + ":" + minutes + ":" + seconds;
+        }
+    </script>
+  </body>
+</html>

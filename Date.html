@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/settings.png">
+    <title>More Settings</title>
+    <style>
+      #backIcon{
+        height: 80px !important;
+        position: relative !important;
+        top: 380px;
+        left: 100px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 180px;
+        margin-left: -300px;
+      }
+
+      #backIcon, .text {
+        animation: moveUpDown 2s ease-in-out infinite;
+      }
+
+      .text {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+        margin-top: 330px;
+        margin-left: 400px;
+      }
+
+      @keyframes moveUpDown {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-50px);
+        }
+      }
+
+      .date-container {
+            font-size: 1.2em;
+            color: #333;
+            position: relative !important;
+            top: 200px;
+            padding: 20px;
+            width: 250px;
+            left: 55px !important;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+      <div>
+        <h2>More Settings</h2> <hr>
+
+        <!--main section-->
+        <main>
+            <h2 class="h2">See the date</h2>
+            <!--date container-->
+            <div>
+              <div class="date-container" id="dateDisplay">
+                <!-- The current date will be displayed here -->
+              </div>
+            </div>
+
+            <!--go back-->
+            <div>
+              <a href="index.html">
+                <div class="container">
+                  <img src="images/settings.png" alt="Image" id="backIcon">
+                  <div class="text">Go Back</div>
+              </div>
+              </a>
+            </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      // Function to display current date
+      function displayDate() {
+            const today = new Date(); // Get the current date and time
+            const options = {
+                weekday: 'long', // Display day of the week
+                year: 'numeric', // Display year
+                month: 'long', // Display full month name
+                day: 'numeric', // Display the day of the month
+            };
+            const formattedDate = today.toLocaleDateString('en-US', options); // Format the date
+            document.getElementById('dateDisplay').innerText = formattedDate; // Display the date
+        }
+
+        // Call the function to display date when the page loads
+        displayDate();
+    </script>
+  </body>
+</html>

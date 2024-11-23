@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/settings.png">
+    <title>More Settings</title>
+    <style>
+      #backIcon{
+        height: 80px !important;
+        position: relative !important;
+        top: 380px;
+        left: 100px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+        margin-left: -300px;
+      }
+
+      #backIcon, .text {
+        animation: moveUpDown 2s ease-in-out infinite;
+      }
+
+      .text {
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+        margin-top: 330px;
+        margin-left: 400px;
+      }
+
+      @keyframes moveUpDown {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-50px);
+        }
+      }
+    </style>
+</head>
+<body>
+
+    <div>
+      <div>
+        <h2>More Settings</h2> <hr>
+
+        <!--main section-->
+        <main>
+            <h2 class="h2">See the Time</h2>
+            <!--time container-->
+            <div>
+              <div class="time-container">
+                <p id="time"></p>
+              </div>
+            </div>
+
+            <!--go back-->
+            <div>
+              <a href="index.html">
+                <div class="container">
+                  <img src="images/settings.png" alt="Image" id="backIcon">
+                  <div class="text">Go Back</div>
+              </div>
+              </a>
+            </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      // time function
+function updateTime() {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+
+  const timeString = `${hours}:${minutes}:${seconds}`;
+  document.getElementById('time').textContent = timeString;
+}
+
+// Update the time every 1000 milliseconds (1 second)
+setInterval(updateTime, 1000);
+
+// Initialize the time display when the page loads
+updateTime();
+    </script>
+  </body>
+</html>
